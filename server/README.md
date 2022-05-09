@@ -1,6 +1,13 @@
 # Express and NodeJS
+----
 
+### Basic Routing
 
-## Routing relatd code in /routes directory
-* Using Express.Router()
+----
+### Managing Data (without a Database)
+----
+### Render Dynamic Content in Views
 
+----
+
+## Understanding Templating Engines (Handlebars)
