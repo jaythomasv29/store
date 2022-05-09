@@ -16,12 +16,13 @@
 ##### Models:
 * Represent your data in your code
 * Work with your data (save, fetch)
-
+* Responsible for saving, fetching & modeling data
 ##### Views
 * What the user sees
 * Decoupled from application logic
 
 ##### Controller
 * Connects the models and your views e.g routes
+* Allows for communication between Model and View
 
 
