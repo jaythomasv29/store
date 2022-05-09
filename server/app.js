@@ -7,21 +7,17 @@ const path = require("path");
 const adminRouter = require("./routes/admin");
 const shopRouter = require("./routes/shop");
 
+const get404Error = require('./controllers/errors')
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.set("view engine", 'ejs');
 app.set("views", "views");
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use("/admin", adminRouter.router);
+app.use("/admin", adminRouter);
 app.use("/shop", shopRouter);
 
-// const server = http.createServer(app)
-// server.listen(PORT)
-// same as below
-
-app.use((req, res, next) => {
-  res.status(404).render('404', { pageTitle: 'Page Not Found'});
-});
+app.use(get404Error);
 
 app.listen(PORT, () => {
   console.log("App is listening on port " + PORT);

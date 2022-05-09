@@ -10,4 +10,18 @@
 
 ----
 
-## Understanding Templating Engines (Handlebars)
+## Understanding Templating Engines (EJS)
+
+### MVC (Model, View, Controller)
+##### Models:
+* Represent your data in your code
+* Work with your data (save, fetch)
+
+##### Views
+* What the user sees
+* Decoupled from application logic
+
+##### Controller
+* Connects the models and your views e.g routes
+
+
