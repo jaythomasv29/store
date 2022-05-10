@@ -1,10 +1,8 @@
-// products array to store products
-const Product = require('../models/product')
-
 // renders the add-product form page
+const Product = require("../models/product");
 exports.renderAddProductPage = (req, res, next) => {
   // res.sendFile(path.join(rootDir, "views", "add-product.html"));
-  res.render("add-product", {
+  res.render("admin/add-product", {
     pageTitle: "Add Item",
     path: "/admin/add",
     formsCSS: true,
@@ -13,23 +11,24 @@ exports.renderAddProductPage = (req, res, next) => {
   });
 };
 
-
 exports.addProduct = (req, res) => {
-  const product = new Product(req.body.name)
+  const { name, imageUrl, price, description } = req.body;
+  console.log(req.body);
+  const product = new Product(name, imageUrl, description, price);
   // console.log(product)
-  product.save()
+  product.save();
 
-  res.redirect("/shop");
+  res.redirect("/");
 };
 
-exports.showAllProducts = async (req, res, next) => {
+exports.getAdminProducts = async (req, res, next) => {
   const products = await Product.fetchAll();
-  
+
   // res.sendFile(path.join(rootDir, 'views', 'shop.html'))
-  res.render("shop", {
-    pageTitle: "shop",
+  res.render("admin/admin-product-list", {
+    pageTitle: "Admin Products Dashboard",
     prods: products,
-    path: "/shop",
+    path: "/admin/products",
     hasProducts: true,
     activeShop: true,
     productCSS: true,

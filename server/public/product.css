@@ -14,21 +14,24 @@ main h1 {
 
 .form-control label,
 .form-control input,
+.form-control textarea,
 .form-control button {
   display: block;
   margin: 12px;
   width: 100%;
 }
 
-.form-control input {
-  border: 1px solid gray;
+.form-control input, .form-control textarea {
+  border: 1px solid lightgray;
   border-radius: 5px;
-
+  
   height: 2rem;
   padding-left: 10px;
 }
 
-
+.form-control textarea {
+  padding-top: 7px;
+}
 
 
 .form-control button {
@@ -50,52 +53,78 @@ button:hover {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   grid-template-rows: auto;
-  gap: 10px 10px;
-  
+  gap: 40px 10px;
   margin: auto;
 
 }
 
 .card {
-  border: 1px solid gray;
+  position: relative;
+
   /* width: 300px; */
   height: 400px;
+  width: 400px;
   box-sizing: border-box;
   border-radius: 5px;
 }
 
 .product__title {
   text-align: center;
-  font-size: 2rem;
-  margin-top: 5px;
+  font-size: 1.25rem;
+  margin-top: 2px;
   letter-spacing: 2px;
   font-weight: 300;
 }
 
+.product__description {
+  color: gray;
+  letter-spacing: 2px;
+  margin: 3px 0px;
+}
+
 .card__image {
   margin: auto;
-  width: 200px;
+  width: 400px;
+  height: 400px;
 }
 
 .card__image img {
   width: 100%;
+  height: 100%;
   margin: 0 auto;
 }
 
-.product__price,
-.product__description {
-  margin-bottom: 2px;
-}
 
-.card__content,
-.card__actions {
+.card__content {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 100%;
   display: flex;
   justify-content: center;
   flex-direction: column;
   align-items: center;
-  margin: 15px;
+  /* margin: 15px; */
+  opacity: 0;
+}
+
+.card__content:hover {
+  opacity: 1;
+  transition: 600ms;
+  z-index: 1;
+}
+
+.card__actions {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
 }
 
 .card__actions button {
+  
+  color: black;
   padding: .7rem 2rem;
+  background: none;
 }

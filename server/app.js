@@ -3,6 +3,7 @@ const PORT = 4000;
 const app = express();
 const bodyParser = require("express");
 const path = require("path");
+const { showAllProducts, getIndex, getCart, getCheckout } = require("./controllers/shop");
 
 const adminRouter = require("./routes/admin");
 const shopRouter = require("./routes/shop");
@@ -15,7 +16,8 @@ app.set("views", "views");
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/admin", adminRouter);
-app.use("/shop", shopRouter);
+
+app.use("/", shopRouter);
 
 app.use(get404Error);
 
