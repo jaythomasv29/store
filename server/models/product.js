@@ -16,10 +16,13 @@ module.exports = class Product {
       let data = await fs.readFile(`${filePath}/db.txt`, { encoding: "utf8" });
       let products = await JSON.parse(data);
       let lastProd = await products[products.length - 1];
+      // reduce through the elements to find the largest id
+      let greatestIdProductId = products.reduce((acc, product) =>{ return product.id > acc ? product.id : acc},0)
+  
       if (!lastProd.id) {
         products.push({ ...this, id: 1 }); // give it an id
       } else {
-        products.push({ ...this, id: lastProd.id++ }); // push product with incremented id
+        products.push({ ...this, id: ++greatestIdProductId }); // push product with incremented id
       }
 
       await fs.writeFile(`${filePath}/db.txt`, JSON.stringify(products));

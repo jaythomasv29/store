@@ -18,9 +18,8 @@ module.exports = class Cart {
   }
 
   static async addProduct(id) {
-    
     const productToAdd = await Product.findProduct(id);
-    console.log(productToAdd)
+    
     let cart = await this.getCartItems();
     // if the product already exists in the cart
     if (cart.products.find((product) => product.id === productToAdd.id)) {
@@ -34,7 +33,6 @@ module.exports = class Cart {
     } else {
       // case where product does not exist in cart yet
       cart.products.push({ ...productToAdd, quantity: 1 });
-      console.log(cart)
     }
     let totalPrice = cart.products.reduce((acc, product) => {
       return acc + Number(product.price * product.quantity);
@@ -51,9 +49,7 @@ module.exports = class Cart {
     // if the product already exists in the cart
     const products = cart.products.map((product) => {
       //find the item that is related to the id,
-      if (product.id === id) {
-        let {quantity } = product
-        
+      if (Number(product.id) === Number(id)) {
         return { ...product, quantity: ++product.quantity };
       } else {
         return product;
@@ -65,13 +61,50 @@ module.exports = class Cart {
 
     await fs.writeFile(
       `${filePath}/cart.txt`,
-      JSON.stringify({ ...cart, products:products, totalPrice })
+      JSON.stringify({ ...cart, products: products, totalPrice })
     );
-
-    // increment the quantity
   }
 
   static async decreaseCartItem(id) {
-    let data = await fs.readFile(`${filePath}/cart.txt`, { encoding: "utf-8" });
+    let cart = await this.getCartItems()
+    let decreasingItem = cart.products.find(product => Number(product.id) === Number(id))
+    
+    if(decreasingItem.quantity == 1) {
+      await this.deleteCartItemQuantity(id)
+    } else {
+      const products = cart.products.map((product) => {
+        //find the item that is related to the id,
+        
+        if (Number(product.id) === Number(id)) {
+          return { ...product, quantity: --product.quantity };
+        } else {
+          return product;
+        }
+      });
+      // console.log('de', products);
+      let totalPrice = cart.products.reduce((acc, product) => {
+        return acc + Number(product.price * product.quantity);
+      }, 0);
+  
+      await fs.writeFile(
+        `${filePath}/cart.txt`,
+        JSON.stringify({ ...cart, products: products, totalPrice })
+      );
+    }
+  
   }
+
+  static async deleteCartItemQuantity(id) {
+    let cart = await this.getCartItems()
+    const revisedCart =  cart.products.filter(product => Number(product.id) !== Number(id))
+    let totalPrice = cart.products.reduce((acc, product) => {
+      return acc + Number(product.price * product.quantity);
+    }, 0);
+    await fs.writeFile(
+      `${filePath}/cart.txt`,
+      JSON.stringify({ ...cart, products: revisedCart, totalPrice })
+    );
+  }
+
+
 };

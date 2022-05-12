@@ -43,8 +43,8 @@ button {
   cursor: pointer;
 }
 
-button:hover {
-  color: rgb(111, 125, 111);
+.btn:hover, .details-btn:hover {
+  /* color: #fff; */
   transform: scale(1.10);
   transition: 500ms ease-in-out;
 }
@@ -76,6 +76,13 @@ button:hover {
   font-weight: 300;
 }
 
+.product__price {
+  font-weight: 300;
+  font-size: 1.5rem;
+  color: #fff;
+  text-shadow: 0.25px 1.75px rgb(87, 86, 86);
+}
+
 .product__description {
   color: gray;
   letter-spacing: 2px;
@@ -93,6 +100,7 @@ button:hover {
   height: 100%;
   margin: 0 auto;
 }
+
 
 
 .card__content {
@@ -122,9 +130,26 @@ button:hover {
 
 }
 
+.details-btn {
+  text-decoration: none;
+  padding: 2px;
+  border: 1px solid grey;
+  color: white;
+  text-shadow: 0.75px 0.75px black;
+  padding: .7rem 3.25rem;
+  border-radius: 5px;
+  background: none;
+  margin-bottom: 5px;
+}
+
+
+
 .card__actions button {
   
-  color: black;
+  color: white;
+  text-shadow: 0.75px 0.75px black;
   padding: .7rem 2rem;
   background: none;
+  border: 1px solid grey;
+  border-radius: 5px;
 }

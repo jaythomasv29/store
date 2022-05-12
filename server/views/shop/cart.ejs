@@ -32,6 +32,12 @@
             <button>+</button>
           </form>
         </div>
+        <div>
+          <form action="/cart/delete-product" method="POST">
+            <input type="hidden" value="<%= item.id %>" name="id">
+            <button class="delete-btn">X</button>
+          </form>
+        </div>
         
       </div>
       <div class="item__actions">

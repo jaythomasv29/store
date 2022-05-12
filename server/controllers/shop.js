@@ -34,11 +34,11 @@ exports.getOrders = (req, res, next) => {
 };
 
 exports.getCart = async (req, res, next) => {
-  const cart = await Cart.getCartItems()
+  const cart = await Cart.getCartItems();
   res.render("shop/cart", {
     path: "/cart",
     pageTitle: "Cart",
-    cart: cart
+    cart: cart,
   });
 };
 exports.getCheckout = (req, res, next) => {
@@ -48,10 +48,9 @@ exports.getCheckout = (req, res, next) => {
   });
 };
 exports.getProductDetails = async (req, res, next) => {
-  
   const { id } = req.params;
   const productDetail = await Product.findProduct(id);
-  console.log(productDetail)
+  console.log(productDetail);
   res.render("shop/product-detail", {
     path: "/products/",
     pageTitle: "Product Details",
@@ -60,17 +59,24 @@ exports.getProductDetails = async (req, res, next) => {
 };
 
 exports.addToCart = async (req, res, next) => {
-  console.log('added');
+  console.log("added");
   const { productId } = req.body;
-   await Cart.addProduct(Number(productId))
-   res.redirect(req.get('referer'));
+  await Cart.addProduct(Number(productId));
+  res.redirect(req.get("referer"));
 };
 
 exports.increaseCartItem = async (req, res, next) => {
-  await Cart.increaseCartItem(Number(req.body.id))
-  res.redirect('/cart')
-}
-exports.decreaseCartItem = (req, res, next) => {
-  console.log('decrease id' ,req.body.id)
-  res.redirect('/cart')
-}
+  await Cart.increaseCartItem(Number(req.body.id));
+  res.redirect("/cart");
+};
+exports.decreaseCartItem = async (req, res, next) => {
+  // console.log(req.body.id)
+  await Cart.decreaseCartItem(req.body.id);
+  res.redirect("/cart");
+};
+
+exports.deleteProductFromCart = async (req, res, next) => {
+  const { id } = req.body;
+  await Cart.deleteCartItemQuantity(id);
+  res.redirect("/cart");
+};
