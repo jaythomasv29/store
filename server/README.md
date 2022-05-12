@@ -25,4 +25,7 @@
 * Connects the models and your views e.g routes
 * Allows for communication between Model and View
 
-
+#### (Todos)
+* Add a Delete POST Route using a form to remove product from cart & from admin product page
+* Add an edit product route /admin/edit to populate a form
+* 

@@ -11,14 +11,18 @@ exports.renderAddProductPage = (req, res, next) => {
   });
 };
 
-exports.addProduct = (req, res) => {
+exports.addProduct = async (req, res) => {
   const { name, imageUrl, price, description } = req.body;
   console.log(req.body);
   const product = new Product(name, imageUrl, description, price);
   // console.log(product)
-  product.save();
-
-  res.redirect("/");
+  await product.save();
+  const products = await Product.fetchAll();
+  res.render("admin/admin-product-list", {
+    pageTitle: "Admin Products Dashboard",
+    prods: products,
+    path: "/admin/products",
+  });
 };
 
 exports.getAdminProducts = async (req, res, next) => {
@@ -29,8 +33,33 @@ exports.getAdminProducts = async (req, res, next) => {
     pageTitle: "Admin Products Dashboard",
     prods: products,
     path: "/admin/products",
-    hasProducts: true,
-    activeShop: true,
-    productCSS: true,
   });
+};
+
+exports.renderEditProduct = async (req, res, next) => {
+  const product = await Product.findProduct(req.params.productId);
+  const editMode = req.query.edit;
+  console.log(product, editMode);
+  if (!product) {
+    return res.redirect("/");
+  }
+  res.render("admin/edit-product", {
+    pageTitle: "Edit Product",
+    product: product,
+    path: "/admin/edit",
+    editing: true,
+  });
+};
+
+exports.editProduct = async (req, res, next) => {
+  const product = req.body; // edited product
+  Product.edit(product);
+  res.redirect("/admin/products");
+};
+
+exports.deleteProduct = (req, res, next) => {
+  const { id } = req.body;
+  console.log(typeof id);
+  Product.delete(Number(id));
+  res.redirect("/admin/products");
 };

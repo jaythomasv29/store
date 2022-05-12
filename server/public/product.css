@@ -51,19 +51,19 @@ button:hover {
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  grid-template-rows: auto;
-  gap: 40px 10px;
-  margin: auto;
-
+  grid-template-columns: repeat(auto-fit, minmax(375px, 1fr));
+  /* grid-template-rows: auto; */
+  gap: 40px;
+  grid-auto-flow: row;
+ 
 }
 
 .card {
   position: relative;
 
   /* width: 300px; */
-  height: 400px;
-  width: 400px;
+  /* height: 400px; */
+  /* width: 400px; */
   box-sizing: border-box;
   border-radius: 5px;
 }

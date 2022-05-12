@@ -1,6 +1,6 @@
 const fs = require("fs/promises");
 const path = require("../utils/path");
-const filePath = `${path}/data/db.txt`;
+const filePath = `${path}/data`;
 
 module.exports = class Product {
   constructor(name, imageUrl, description, price) {
@@ -13,37 +13,73 @@ module.exports = class Product {
   async save() {
     try {
       // products.push(this)
-      let data = await fs.readFile(filePath, { encoding: "utf8" });
+      let data = await fs.readFile(`${filePath}/db.txt`, { encoding: "utf8" });
       let products = await JSON.parse(data);
       let lastProd = await products[products.length - 1];
-      if(!lastProd.id) {
-        products.push({...this, id: 1});  // give it an id
+      if (!lastProd.id) {
+        products.push({ ...this, id: 1 }); // give it an id
       } else {
-        products.push({...this, id: lastProd.id++})  // push product with incremented id
+        products.push({ ...this, id: lastProd.id++ }); // push product with incremented id
       }
 
-      await fs.writeFile(filePath, JSON.stringify(products));
+      await fs.writeFile(`${filePath}/db.txt`, JSON.stringify(products));
     } catch (err) {
       console.log(err);
     }
   }
   // enables to call directly on Class Product
   static async fetchAll() {
-    let data = await fs.readFile(filePath, { encoding: "utf8" });
-    if (!data) {  // if there is no data write an empty [] for storage
-      console.log('no data')
-      await fs.writeFile(filePath, JSON.stringify([]));
-      console.log('products', products)
+    let data = await fs.readFile(`${filePath}/db.txt`, { encoding: "utf8" });
+    if (!data) {
+      // if there is no data write an empty [] for storage
+      console.log("no data");
+      await fs.writeFile(`${filePath}/db.txt`, JSON.stringify([]));
     }
     let products = await JSON.parse(data);
     return products;
   }
 
   static async findProduct(id) {
-    let data = await fs.readFile(filePath, { encoding: "utf8" });
-    let products = await JSON.parse(data)
-    let foundProduct = products.find(product => product.id === Number(id))
+    let data = await fs.readFile(`${filePath}/db.txt`, { encoding: "utf8" });
+    let products = await JSON.parse(data);
+    let foundProduct = products.find((product) => product.id === Number(id));
+
+    return foundProduct;
+  }
+
+  static async edit(product) {
+    const { name, imageUrl, price, description, id } = product;
+    const products = await this.getDataJSON();
+    for (let i = 0; i < products.length; i++) {
+      if (Number(products[i].id) === Number(product.id)) {
+        products[i] = {
+          ...product,
+          name,
+          imageUrl,
+          price,
+          description,
+          id: Number(id),
+        };
+      }
+      await fs.writeFile(`${filePath}/db.txt`, JSON.stringify(products));
+    }
+  }
+
+  static async delete(id) {
+    const products = await this.getDataJSON();
+    for (let i = 0; i < products.length; i++) {
+      if(products[i].id === id) {
+        products.splice(i, 1)
+      }
+    }
     
-    return foundProduct
+    await fs.writeFile(`${filePath}/db.txt`, JSON.stringify(products));
+    
+  }
+
+  static async getDataJSON() {
+    let data = await fs.readFile(`${filePath}/db.txt`, { encoding: "utf8" });
+    let products = await JSON.parse(data);
+    return products;
   }
 };

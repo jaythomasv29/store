@@ -1,9 +1,58 @@
 <%- include('../includes/head.ejs') %>
+<link rel="stylesheet" href="cart.css">
 </head>
 
 <body>
   <%- include('../includes/nav.ejs') %>
-<h2>Cart</h2>
+<div class="container">
+  <% if (!cart.products.length){ %> 
+    <h1>No Products in Cart</h1>
+  <% } else { %> 
+    <h1>Cart</h1>
+    <% cart.products.forEach(item => { %> 
+    <div class="item__container">
+      <div class="item__img">
+        <img src="<%= item.imageUrl %>" alt="<%= item.title %>"/>
+      </div>
+      <div class="item__details">
+        <h3>Item</h3>
+        <p><%= item.name %> </p>
+        <p><%= item.description %> </p>
+      </div>
+      <div class="item__quantity">
+        <h3>Quantity</h3>
+        <div>
+          <form action="/cart/decrease" method="POST">
+            <input type="hidden" value="<%= item.id %>" name="id">
+            <button>-</button>
+          </form>
+          <h3><%= item.quantity %> </h3>
+          <form action="/cart/increase" method="POST">
+            <input type="hidden" value="<%= item.id %>" name="id">
+            <button>+</button>
+          </form>
+        </div>
+        
+      </div>
+      <div class="item__actions">
+        <h3>Price</h3>
+        <p>$ <%= item.price %></p>
+        <br/>
+       <p>Total:</p>
+        <p>$ <%= item.price * item.quantity%></p>
+        
+      </div>
+    </div>
+    
+    
+    <% }) %> 
+    <div class="item__total">
+      <p>Subtotal: <%= cart.totalPrice %></h3>
+      <p>Tax: 9.5%</p>
+      <p>Total:</p>
+    </div>
+    <% } %> 
+</div>
 
 
   <%- include('../includes/end.ejs') %>
