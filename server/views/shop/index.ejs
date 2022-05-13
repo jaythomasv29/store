@@ -10,9 +10,11 @@
         <% prods.forEach(prod =>  { %>
         <article class="card product-item">
           <div class="card__image">
+            
             <!-- image -->
             <img src=<%= prod.imageUrl %> alt="product display">
           </div>
+
           <h1 class="product__title"> <%= prod.name %></h1>
           <div class="card__content">
             <span class="product__price">$<%= prod.price %></span>

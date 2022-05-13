@@ -2,19 +2,19 @@ const Cart = require("../models/cart");
 const Product = require("../models/product");
 
 exports.getIndex = async (req, res, next) => {
-  let products = await Product.fetchAll();
+  const products = await Product.findAll()
+  console.log('getIndx', products)
+  
   res.render("shop/index", {
     pageTitle: "Shop",
     prods: products,
     path: "/",
-    hasProducts: true,
-    activeShop: true,
-    productCSS: true,
+    
   });
 };
 
 exports.showAllProducts = async (req, res, next) => {
-  const products = await Product.fetchAll();
+  const [products, fieldData] = await Product.fetchAll();
   // res.sendFile(path.join(rootDir, 'views', 'shop.html'))
   res.render("shop/product-list", {
     pageTitle: "Product List",
@@ -49,13 +49,21 @@ exports.getCheckout = (req, res, next) => {
 };
 exports.getProductDetails = async (req, res, next) => {
   const { id } = req.params;
-  const productDetail = await Product.findProduct(id);
-  console.log(productDetail);
-  res.render("shop/product-detail", {
-    path: "/products/",
-    pageTitle: "Product Details",
-    prod: productDetail,
+  try {
+   const product = await Product.findAll({
+     where: {
+       id: id
+     }
+   })
+   res.render("shop/product-detail", {
+    path: "/checkout",
+    pageTitle: "Checkout",
+    product: product[0]
   });
+
+  } catch (e){
+    if(e) console.log(e)
+  }
 };
 
 exports.addToCart = async (req, res, next) => {

@@ -13,22 +13,22 @@ exports.renderAddProductPage = (req, res, next) => {
 
 exports.addProduct = async (req, res) => {
   const { name, imageUrl, price, description } = req.body;
-  console.log(req.body);
-  const product = new Product(name, imageUrl, description, price);
-  // console.log(product)
-  await product.save();
-  const products = await Product.fetchAll();
-  res.render("admin/admin-product-list", {
-    pageTitle: "Admin Products Dashboard",
-    prods: products,
-    path: "/admin/products",
-  });
+  try {
+    const product = await Product.create({
+      name: name,
+      description: description,
+      price: price,
+      imageUrl: imageUrl
+    })
+    console.log('Product added ' + product.id)
+  } catch(err) {
+    if(err) console.log(err)
+  }
+  res.redirect('/admin/products')
 };
 
 exports.getAdminProducts = async (req, res, next) => {
-  const products = await Product.fetchAll();
-
-  // res.sendFile(path.join(rootDir, 'views', 'shop.html'))
+  const products = await Product.findAll()
   res.render("admin/admin-product-list", {
     pageTitle: "Admin Products Dashboard",
     prods: products,
@@ -60,6 +60,10 @@ exports.editProduct = async (req, res, next) => {
 exports.deleteProduct = (req, res, next) => {
   const { id } = req.body;
   console.log(typeof id);
-  Product.delete(Number(id));
+  Product.destroy({
+    where: {
+      id: id
+    }
+  })
   res.redirect("/admin/products");
 };
