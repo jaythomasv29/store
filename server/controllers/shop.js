@@ -14,7 +14,7 @@ exports.getIndex = async (req, res, next) => {
 };
 
 exports.showAllProducts = async (req, res, next) => {
-  const [products, fieldData] = await Product.fetchAll();
+  const products = await Product.findAll()
   // res.sendFile(path.join(rootDir, 'views', 'shop.html'))
   res.render("shop/product-list", {
     pageTitle: "Product List",

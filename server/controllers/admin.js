@@ -18,17 +18,17 @@ exports.addProduct = async (req, res) => {
       name: name,
       description: description,
       price: price,
-      imageUrl: imageUrl
-    })
-    console.log('Product added ' + product.id)
-  } catch(err) {
-    if(err) console.log(err)
+      imageUrl: imageUrl,
+    });
+    console.log("Product added " + product.id);
+  } catch (err) {
+    if (err) console.log(err);
   }
-  res.redirect('/admin/products')
+  res.redirect("/admin/products");
 };
 
 exports.getAdminProducts = async (req, res, next) => {
-  const products = await Product.findAll()
+  const products = await Product.findAll();
   res.render("admin/admin-product-list", {
     pageTitle: "Admin Products Dashboard",
     prods: products,
@@ -37,33 +37,44 @@ exports.getAdminProducts = async (req, res, next) => {
 };
 
 exports.renderEditProduct = async (req, res, next) => {
-  const product = await Product.findProduct(req.params.productId);
-  const editMode = req.query.edit;
-  console.log(product, editMode);
-  if (!product) {
+  const { productId } = req.params;
+  const product = await Product.findAll({
+    where: {
+      id: productId,
+    },
+  });
+  if (!productId) {
     return res.redirect("/");
   }
   res.render("admin/edit-product", {
     pageTitle: "Edit Product",
-    product: product,
+    product: product[0],
     path: "/admin/edit",
     editing: true,
   });
 };
 
 exports.editProduct = async (req, res, next) => {
-  const product = req.body; // edited product
-  Product.edit(product);
+  const { id, name, imageUrl, price, description } = req.body; // edited product
+  const updated = await Product.update(
+    { name, description, price, imageUrl },
+    {
+      where: {
+        id: id,
+      },
+    }
+  );
+
   res.redirect("/admin/products");
 };
 
 exports.deleteProduct = (req, res, next) => {
   const { id } = req.body;
-  console.log(typeof id);
+
   Product.destroy({
     where: {
-      id: id
-    }
-  })
+      id: id,
+    },
+  });
   res.redirect("/admin/products");
 };
