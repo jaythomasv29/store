@@ -1,6 +1,14 @@
-# Express and NodeJS
+# Full Stack ECommerce Project
+###### NodeJS, Express, SQL & EJS (Front end will be transfered to React in next iteration)
 ----
-
+## App Preview
+Shop Page
+![shop-page](./resources/main.png)
+Product Edit / Add Page
+![edit-page](./resources/edit.png)
+User Cart Page
+![cart-page](./resources/cart.png)
+----
 
 #### Managing Data Using MYSQL and Sequelize ORM Object Relational Mapper
 * Create Models: Product, User, Carts, Orders
