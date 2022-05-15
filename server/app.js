@@ -11,6 +11,8 @@ const adminRouter = require("./routes/admin");
 const shopRouter = require("./routes/shop");
 
 const get404Error = require("./controllers/errors");
+const Cart = require("./models/cart");
+const CartItem = require("./models/cart-item");
 
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -29,32 +31,35 @@ app.use("/admin", adminRouter);
 app.use("/", shopRouter);
 app.use(get404Error);
 
+//associations
 Product.belongsTo(User, {
   constraints: true,
   onDelete: "CASCADE",
 });
 User.hasMany(Product);
+User.hasOne(Cart)  // adds user field to cart
+Cart.belongsTo(User)
+Cart.belongsToMany(Product, {through: CartItem })
+Product.belongsToMany(Cart, {through: CartItem})
 
 // creates all tables if it doesn't exist
 sequelize
   .sync()
   .then(() => {
-    return User.findAll({
+    return User.findOne({
       where: {
         id: 1,
       },
     });
   })
   .then((user) => {
-    if (user.length === 0) {
+    if (!user) {
       console.log("created");
-      user = User.create({ name: "James", email: "james@email.com" });
+      return User.create({ name: "James", email: "james@email.com" });
     }
     return user;
   })
-  .then((user) => {
-    const [userData, fieldValues] = user;
-  
+  .then(() => {
     app.listen(PORT, () => {
       console.log("App is listening on port " + PORT);
     });

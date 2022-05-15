@@ -5,7 +5,7 @@
 <body>
   <%- include('../includes/nav.ejs') %>
 <div class="container">
-  <% if (!cart.products.length){ %> 
+  <% if (!cart){ %> 
     <h1>No Products in Cart</h1>
   <% } else { %> 
     <h1>Cart</h1>

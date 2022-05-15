@@ -2,19 +2,18 @@ const Cart = require("../models/cart");
 const Product = require("../models/product");
 
 exports.getIndex = async (req, res, next) => {
-  const products = await Product.findAll()
-  console.log('getIndx', products)
-  
+  const products = await Product.findAll();
+  console.log("getIndx", products);
+
   res.render("shop/index", {
     pageTitle: "Shop",
     prods: products,
     path: "/",
-    
   });
 };
 
 exports.showAllProducts = async (req, res, next) => {
-  const products = await Product.findAll()
+  const products = await Product.findAll();
   // res.sendFile(path.join(rootDir, 'views', 'shop.html'))
   res.render("shop/product-list", {
     pageTitle: "Product List",
@@ -34,12 +33,15 @@ exports.getOrders = (req, res, next) => {
 };
 
 exports.getCart = async (req, res, next) => {
-  const cart = await Cart.getCartItems();
-  res.render("shop/cart", {
-    path: "/cart",
-    pageTitle: "Cart",
-    cart: cart,
-  });
+  const cart = await req.user.getCart();
+  const products = await cart.getProducts();
+  console.log(products)
+
+  // res.render("shop/cart", {
+  //   path: "/cart",
+  //   pageTitle: "Cart",
+  //   cart: products
+  // });
 };
 exports.getCheckout = (req, res, next) => {
   res.render("shop/checkout", {
@@ -50,19 +52,18 @@ exports.getCheckout = (req, res, next) => {
 exports.getProductDetails = async (req, res, next) => {
   const { id } = req.params;
   try {
-   const product = await Product.findAll({
-     where: {
-       id: id
-     }
-   })
-   res.render("shop/product-detail", {
-    path: "/checkout",
-    pageTitle: "Checkout",
-    product: product[0]
-  });
-
-  } catch (e){
-    if(e) console.log(e)
+    const product = await Product.findAll({
+      where: {
+        id: id,
+      },
+    });
+    res.render("shop/product-detail", {
+      path: "/checkout",
+      pageTitle: "Checkout",
+      product: product[0],
+    });
+  } catch (e) {
+    if (e) console.log(e);
   }
 };
 

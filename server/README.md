@@ -22,6 +22,10 @@ User Cart Page
       imageUrl: imageUrl,
     });`
 
+#### Sequelize Associations (Continued)
+* One to One: (hasOne, belongsTo) A user has one cart / A person has one Social Security Number
+`SSN.belongsTo(Person)`
+`Person.hasOne(SSN)`
 ----
 ## Understanding Templating Engines (EJS)
 * Using EJS tags to display dynamic data
