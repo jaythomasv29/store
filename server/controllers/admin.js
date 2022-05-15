@@ -12,14 +12,16 @@ exports.renderAddProductPage = (req, res, next) => {
 };
 
 exports.addProduct = async (req, res) => {
+  console.log(req.user)
   const { name, imageUrl, price, description } = req.body;
   try {
-    const product = await Product.create({
+    await req.user.createProduct({  // magic method from sequelize using association
       name: name,
       description: description,
       price: price,
       imageUrl: imageUrl,
-    });
+      userId: req.user.id
+    })
     console.log("Product added " + product.id);
   } catch (err) {
     if (err) console.log(err);
