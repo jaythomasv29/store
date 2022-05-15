@@ -3,8 +3,6 @@ const Product = require("../models/product");
 
 exports.getIndex = async (req, res, next) => {
   const products = await Product.findAll();
-  console.log("getIndx", products);
-
   res.render("shop/index", {
     pageTitle: "Shop",
     prods: products,
@@ -33,15 +31,20 @@ exports.getOrders = (req, res, next) => {
 };
 
 exports.getCart = async (req, res, next) => {
-  const cart = await req.user.getCart();
-  const products = await cart.getProducts();
-  console.log(products)
+  try {
+    const cart = await req.user.getCart();  // get cart associated to user
+    const products = await cart.getProducts();  
+    console.log('Products--->', products)
+    res.render("shop/cart", {
+      path: "/cart",
+      pageTitle: "Cart",
+      cart: products
+    });
 
-  // res.render("shop/cart", {
-  //   path: "/cart",
-  //   pageTitle: "Cart",
-  //   cart: products
-  // });
+  } catch (e) {
+    if(e) console.log('Error Retrieving Cart', e)
+  }
+  
 };
 exports.getCheckout = (req, res, next) => {
   res.render("shop/checkout", {
@@ -70,8 +73,26 @@ exports.getProductDetails = async (req, res, next) => {
 exports.addToCart = async (req, res, next) => {
   console.log("added");
   const { productId } = req.body;
-  await Cart.addProduct(Number(productId));
-  res.redirect(req.get("referer"));
+  const cart = await req.user.getCart();  // get cart associated to user
+  const productMatch = await cart.getProducts({ where: {id: productId}})
+  const product = await Product.findByPk(productId)
+  try {
+    // check if product is NOT in cart yet
+    if (productMatch.length === 0) {
+        console.log(product)
+        await cart.addProduct(product, { through: { quantity: 1 } })
+        console.log('product added');
+    } else {
+      let quantity = productMatch[0].cartItem.quantity
+      await cart.addProduct(product, { through: { quantity: quantity+1 } })
+    }
+ 
+  } catch (e) {
+    console.log(e)
+  }
+  
+  res.redirect('back');
+
 };
 
 exports.increaseCartItem = async (req, res, next) => {

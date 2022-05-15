@@ -26,6 +26,12 @@ User Cart Page
 * One to One: (hasOne, belongsTo) A user has one cart / A person has one Social Security Number
 `SSN.belongsTo(Person)`
 `Person.hasOne(SSN)`
+
+* One to Many: (`hasMany`, `belongsTo`) A User can create many reviews
+`User.hasMany(Review)`
+`Review.belongsTo(User)`
+- This association creates a restaurant id field and user id field in the  `reviews` table for lookup
+
 ----
 ## Understanding Templating Engines (EJS)
 * Using EJS tags to display dynamic data

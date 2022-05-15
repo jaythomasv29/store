@@ -36,34 +36,38 @@ Product.belongsTo(User, {
   constraints: true,
   onDelete: "CASCADE",
 });
-User.hasMany(Product);
+User.hasMany(Product);  // allows a userId to be related to each product
 User.hasOne(Cart)  // adds user field to cart
+
 Cart.belongsTo(User)
-Cart.belongsToMany(Product, {through: CartItem })
+Cart.belongsToMany(Product, {through: CartItem })  // creates cart item to relate products within a cart by creating a productId and cart
 Product.belongsToMany(Cart, {through: CartItem})
 
 // creates all tables if it doesn't exist
-sequelize
-  .sync()
-  .then(() => {
-    return User.findOne({
-      where: {
-        id: 1,
-      },
-    });
-  })
-  .then((user) => {
-    if (!user) {
-      console.log("created");
-      return User.create({ name: "James", email: "james@email.com" });
-    }
-    return user;
-  })
-  .then(() => {
-    app.listen(PORT, () => {
-      console.log("App is listening on port " + PORT);
-    });
-  })
-  .catch((err) => {
-    console.log(err);
-  });
+// sequelize
+//   .sync()
+//   .then(() => {
+//     return User.findOne({
+//       where: {
+//         id: 1,
+//       },
+//     });
+//   })
+//   .then((user) => {
+//     if (!user) {
+//       console.log("created");
+//       return User.create({ name: "James", email: "james@email.com" });
+//     }
+//     return user;
+//   })
+//   .then(() => {
+//     app.listen(PORT, () => {
+//       console.log("App is listening on port " + PORT);
+//     });
+//   })
+//   .catch((err) => {
+//     console.log(err);
+//   });
+app.listen(PORT, () => {
+        console.log("App is listening on port " + PORT);
+      });
