@@ -74,6 +74,8 @@ User Cart Page
 ```
 ----
 #### (In progress)
+* Use sequelize to increment/decrement cart items in cart page
+* Delete cartItems in cart 
+
 * Create a live Mongo Version of E-Commerce
 * Add an edit product route /admin/edit to populate a form
-* 

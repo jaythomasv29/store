@@ -11,10 +11,9 @@ router.get('/products/:id', getProductDetails)
 
 router.get("/cart", getCart)
 router.post('/cart', addToCart)
-router.post('/cart/decrease', decreaseCartItem)
+router.post('/cart/delete', deleteProductFromCart)
 
-router.post('/cart/increase', increaseCartItem)
+// router.post('/cart/increase', increaseCartItem)
 router.get("/checkout", getCheckout)
 router.get('/orders', getOrders)
-router.post('/cart/delete-product', deleteProductFromCart)
 module.exports = router;

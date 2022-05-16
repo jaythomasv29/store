@@ -32,19 +32,16 @@ exports.getOrders = (req, res, next) => {
 
 exports.getCart = async (req, res, next) => {
   try {
-    const cart = await req.user.getCart();  // get cart associated to user
-    const products = await cart.getProducts();  
-    console.log('Products--->', products)
+    const cart = await req.user.getCart(); // get cart associated to user
+    const products = await cart.getProducts();
     res.render("shop/cart", {
       path: "/cart",
       pageTitle: "Cart",
-      cart: products
+      cart: products,
     });
-
   } catch (e) {
-    if(e) console.log('Error Retrieving Cart', e)
+    if (e) console.log("Error Retrieving Cart", e);
   }
-  
 };
 exports.getCheckout = (req, res, next) => {
   res.render("shop/checkout", {
@@ -73,40 +70,59 @@ exports.getProductDetails = async (req, res, next) => {
 exports.addToCart = async (req, res, next) => {
   console.log("added");
   const { productId } = req.body;
-  const cart = await req.user.getCart();  // get cart associated to user
-  const productMatch = await cart.getProducts({ where: {id: productId}})
-  const product = await Product.findByPk(productId)
+  const cart = await req.user.getCart(); // get cart associated to user
+  const productMatch = await cart.getProducts({ where: { id: productId } });
+  const product = await Product.findByPk(productId);
   try {
     // check if product is NOT in cart yet
     if (productMatch.length === 0) {
-        console.log(product)
-        await cart.addProduct(product, { through: { quantity: 1 } })
-        console.log('product added');
+      await cart.addProduct(product, { through: { quantity: 1 } });
     } else {
-      let quantity = productMatch[0].cartItem.quantity
-      await cart.addProduct(product, { through: { quantity: quantity+1 } })
+      let { quantity } = productMatch[0].cartItem;
+      await cart.addProduct(product, { through: { quantity: quantity + 1 } });
     }
- 
   } catch (e) {
-    console.log(e)
+    console.log(e);
   }
-  
-  res.redirect('back');
-
+  res.redirect("back");
 };
 
-exports.increaseCartItem = async (req, res, next) => {
-  await Cart.increaseCartItem(Number(req.body.id));
-  res.redirect("/cart");
-};
-exports.decreaseCartItem = async (req, res, next) => {
-  // console.log(req.body.id)
-  await Cart.decreaseCartItem(req.body.id);
-  res.redirect("/cart");
-};
+// exports.increaseCartItem = async (req, res, next) => {
+//   await Cart.increaseCartItem(Number(req.body.id));
+//   res.redirect("/cart");
+// };
+
+// exports.decreaseCartItem = async (req, res, next) => {
+//   // console.log(req.body.id)
+//   await Cart.decreaseCartItem(req.body.id);
+//   res.redirect("/cart");
+// };
 
 exports.deleteProductFromCart = async (req, res, next) => {
-  const { id } = req.body;
-  await Cart.deleteCartItemQuantity(id);
+  try {
+    const { id, action } = req.body;
+    const cart = await req.user.getCart(); // get cart associated to user
+    const productMatch = await cart.getProducts({ where: { id: id } });
+    let { quantity } = productMatch[0].cartItem;
+  
+    const product = await Product.findByPk(id);
+    if(action === 'deleteAll') {
+      await cart.removeProduct(product, {
+        through: {
+          id: id
+        }
+      })
+    } else if (action === 'decrement') {
+      quantity > 1 ? await cart.addProduct(product, { through: {quantity: quantity - 1}}) : await cart.removeProduct(product, {
+        through: {
+          id: id
+        }
+      })
+    } 
+  } catch(e) {
+    if (e) console.log(e)
+  }
+
+  // else action is deleteAll
   res.redirect("/cart");
 };
