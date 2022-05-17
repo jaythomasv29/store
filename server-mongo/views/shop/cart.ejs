@@ -1,0 +1,67 @@
+<%- include('../includes/head.ejs') %>
+<link rel="stylesheet" href="./cart.css">
+</head>
+
+<body>
+  <%- include('../includes/nav.ejs') %>
+<div class="container">
+  <% if (cart.length == 0){ %> 
+    <h1>No Products in Cart</h1>
+  <% } else { %> 
+    <h1>Cart</h1>
+    <% cart.forEach(item => { %> 
+    <div class="item__container">
+      <div class="item__img">
+        <img src="<%= item.imageUrl %>" alt="<%= item.title %>"/>
+      </div>
+      <div class="item__details">
+        <h3>Item</h3>
+        <p><%= item.name %> </p>
+        <p><%= item.description %> </p>
+      </div>
+      <div class="item__quantity">
+        <h3>Quantity</h3>
+        <div>
+          <form action="/cart/delete" method="POST">
+            <input type="hidden" value="<%= item.id %>" name="id">
+            <input type="hidden" value="decrement" name="action">
+            
+            <button type="submit">-</button>
+          </form>
+          <h3><%= item.cartItem.quantity %> </h3>
+          <form action="/cart" method="POST">
+            <input type="hidden" value="<%= item.id %>" name="productId">
+            <button type="submit">+</button>
+          </form>
+        </div>
+        <div>
+          <form action="/cart/delete" method="POST">
+            <input type="hidden" value="<%= item.id %>" name="id">
+            <input type="hidden" value="deleteAll" name="action">
+            <button type="submit" class="delete-btn">X</button>
+          </form>
+        </div>
+        
+      </div>
+      <div class="item__actions">
+        <h3>Price</h3>
+        <p>$ <%= item.price %></p>
+        <br/>
+       <p>Total:</p>
+       <p>$ <%= item.cartItem.quantity * item.price %></p>
+        
+      </div>
+    </div>
+    
+    
+    <% }) %> 
+    <div class="item__total">
+      <p>Subtotal: <%= cart.totalPrice %></h3>
+      <p>Tax: 9.5%</p>
+      <p>Total:</p>
+    </div>
+    <% } %> 
+</div>
+
+
+  <%- include('../includes/end.ejs') %>
